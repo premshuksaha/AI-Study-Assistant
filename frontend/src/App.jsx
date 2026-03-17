@@ -1,8 +1,14 @@
-import React from 'react'
+import { Navigate, Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Landing from "./pages/Landing";
 
-const App = () => {
+function App() {
   return (
-    <div>App</div>
+    <Routes>
+      <Route path="/" element={<Landing />} />
+      <Route path="/home" element={<Home />} />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   )
 }
 
