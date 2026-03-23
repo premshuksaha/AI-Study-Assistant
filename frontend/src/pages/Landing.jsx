@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { FaBolt, FaChartLine, FaFilePdf, FaGraduationCap, FaShieldAlt } from "react-icons/fa";
 import Login from "../components/Login";
 import Signup from "../components/Signup";
-import GoogleGIcon from "../components/GoogleGIcon";
 import { APP_NAME, LANDING_FEATURES } from "../utils/data";
 
 export default function Landing() {
@@ -24,37 +23,32 @@ export default function Landing() {
   return (
     <div className="min-h-dvh bg-zinc-950 text-zinc-100">
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-40 left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-violet-500/25 blur-3xl" />
-        <div className="absolute -bottom-40 left-1/4 h-[520px] w-[520px] rounded-full bg-cyan-500/15 blur-3xl" />
+        <div className="absolute -top-40 left-1/2 h-130 w-130-translate-x-1/2 rounded-full bg-violet-500/25 blur-3xl" />
+        <div className="absolute -bottom-40 left-1/4 h-130 w-130 rounded-full bg-cyan-500/15 blur-3xl" />
       </div>
 
       <header className="relative">
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5">
           <div className="flex items-center gap-3">
-            <div className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 ring-1 ring-white/15">
-              <span className="text-sm font-semibold tracking-wide">AI</span>
-            </div>
+              <img
+                src="/favicon.svg"
+                alt="AI Study Assistant"
+                className="h-8 w-8"
+              />
             <div className="leading-tight">
               <div className="text-sm font-semibold">{APP_NAME}</div>
               <div className="text-xs text-zinc-400">Notes. Graphs. PDFs.</div>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center">
             <button
-              type="button"
-              onClick={() => setAuthModal("login")}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-zinc-200 hover:bg-white/10"
-            >
-              Log in
-            </button>
-            <button
-              type="button"
-              onClick={() => setAuthModal("signup")}
-              className="rounded-lg bg-white px-3 py-2 text-sm font-semibold text-zinc-950 hover:bg-zinc-200"
-            >
-              Sign up
-            </button>
+                type="button"
+                onClick={() => setAuthModal("login")}
+                className="rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 hover:bg-violet-400"
+              >
+                Get started
+              </button>
           </div>
         </nav>
       </header>
@@ -73,27 +67,6 @@ export default function Landing() {
               Enter your topic, class information, or exam type—get clean notes with optional graphs, then
               download the full result as a PDF.
             </p>
-
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              <button
-                type="button"
-                onClick={() => setAuthModal("signup")}
-                className="rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 hover:bg-violet-400"
-              >
-                Get started
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthModal("signup");
-                }}
-                className="ml-0 bg-white/10 inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-zinc-200 hover:bg-white/15 md:ml-2"
-              >
-                <GoogleGIcon className="h-4 w-4" />
-                Continue with Google
-              </button>
-            </div>
-
             <div className="mt-7 flex flex-wrap gap-3 text-xs text-zinc-400">
               <span className="rounded-lg bg-white/5 px-2 py-1 ring-1 ring-white/10">Topic → Notes</span>
               <span className="rounded-lg bg-white/5 px-2 py-1 ring-1 ring-white/10">Class info → Notes</span>
@@ -102,8 +75,9 @@ export default function Landing() {
             </div>
           </div>
 
+
           <div className="relative">
-            <div className="rounded-2xl bg-gradient-to-b from-white/10 to-white/5 p-1 ring-1 ring-white/10">
+            <div className="rounded-2xl bg-linear-to-b from-white/10 to-white/5 p-1 ring-1 ring-white/10">
               <div className="rounded-2xl bg-zinc-950/60 p-6">
                 <div className="flex items-center justify-between">
                   <div className="text-sm font-semibold">Your next notes</div>
@@ -184,27 +158,14 @@ export default function Landing() {
         open={authModal === "login"}
         onClose={() => setAuthModal(null)}
         onSwitchToSignup={() => setAuthModal("signup")}
-        onGoogle={() => {
-          // Hook your Google OAuth here
-        }}
-        onSubmit={(values) => {
-          // Hook your login API here
-          console.log("login", values);
-        }}
       />
 
       <Signup
         open={authModal === "signup"}
         onClose={() => setAuthModal(null)}
         onSwitchToLogin={() => setAuthModal("login")}
-        onGoogle={() => {
-          // Hook your Google OAuth here
-        }}
-        onSubmit={(values) => {
-          // Hook your signup API here (and grant 100 credits server-side)
-          console.log("signup", values);
-        }}
       />
     </div>
   );
 }
+

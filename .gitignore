@@ -8,6 +8,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+.DS_Store
 
 # ==============================
 # Frontend (Vite + React)
@@ -20,6 +21,8 @@ frontend/npm-debug.log*
 frontend/yarn-debug.log*
 frontend/yarn-error.log*
 frontend/pnpm-debug.log*
+frontend/.env
+frontend/.DS_Store
 
 # ==============================
 # Backend (Python / Node / etc.)
@@ -28,6 +31,7 @@ backend/venv/
 backend/node_modules/
 backend/__pycache__/
 backend/*.env
+backend/.DS_Store
 
 # ==============================
 # OS & Editor Files

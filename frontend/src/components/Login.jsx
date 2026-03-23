@@ -1,13 +1,21 @@
-import { useEffect, useId, useMemo, useState } from "react";
+import { useContext, useEffect, useId, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FaXmark } from "react-icons/fa6";
-import GoogleGIcon from "./GoogleGIcon";
 import { canSubmitLogin } from "../utils/helper";
+import { API_PATHS } from "../utils/apiPaths";
+import axiosInstance from "../utils/axiosInstance";
+import { UserContext } from "../context/UserContext";
+import Googlelogin from "./Googlelogin";
+import Loader from "./Loader";
+import toast from "react-hot-toast";
 
-export default function Login({ open, onClose, onSubmit, onGoogle, onSwitchToSignup }) {
+export default function Login({ open, onClose, onSwitchToSignup }) {
   const titleId = useId();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const navigate = useNavigate();
+  const { updateUser } = useContext(UserContext);
 
   const canSubmit = useMemo(
     () => canSubmitLogin({ email, password }),
@@ -30,6 +38,24 @@ export default function Login({ open, onClose, onSubmit, onGoogle, onSwitchToSig
     setPassword("");
     setSubmitting(false);
   }, [open]);
+
+  const handleLogin = async () => {
+    try {
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email: email.trim(),
+        password,
+      });
+      const { token, user } = response.data;
+
+      localStorage.setItem("token", token);
+      updateUser(user);
+      onClose?.();
+      navigate("/home");
+    } catch (err) {
+      const message = err?.response?.data?.message || "Login failed. Please check your credentials and try again.";
+      toast.error(message);
+    }
+  };
 
   if (!open) return null;
 
@@ -72,7 +98,7 @@ export default function Login({ open, onClose, onSubmit, onGoogle, onSwitchToSig
             if (!canSubmit || submitting) return;
             try {
               setSubmitting(true);
-              await onSubmit?.({ email: email.trim(), password });
+              await handleLogin();
             } finally {
               setSubmitting(false);
             }
@@ -109,7 +135,15 @@ export default function Login({ open, onClose, onSubmit, onGoogle, onSwitchToSig
             disabled={!canSubmit || submitting}
             className="mt-1 w-full rounded-xl bg-violet-500 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {submitting ? "Logging in..." : "Log in"}
+            {submitting ? (
+              <Loader
+                size="sm"
+                text="Logging in..."
+                className="justify-center text-white"
+              />
+            ) : (
+              "Log in"
+            )}
           </button>
 
           <div className="relative py-2">
@@ -119,14 +153,14 @@ export default function Login({ open, onClose, onSubmit, onGoogle, onSwitchToSig
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={() => onGoogle?.()}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-zinc-950 hover:bg-zinc-200"
-          >
-            <GoogleGIcon className="h-4 w-4" />
-            Continue with Google
-          </button>
+          <Googlelogin
+            onSuccess={() => {
+              onClose?.();
+            }}
+            onError={(message) => {
+              toast.error(message);
+            }}
+          />
         </form>
 
         <div className="mt-5 text-center text-sm text-zinc-400">
