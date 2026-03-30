@@ -1,8 +1,8 @@
 import { useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
-import { API_PATHS } from "../utils/apiPaths";
-import axiosInstance from "../utils/axiosInstance";
+import { UserContext } from "../../context/UserContext";
+import { API_PATHS } from "../../utils/apiPaths";
+import axiosInstance from "../../utils/axiosInstance";
 
 export default function Googlelogin({ onSuccess, onError, className = "" }) {
   const buttonRef = useRef(null);

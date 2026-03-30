@@ -3,12 +3,12 @@ import Homelayout from '../components/Home/homelayout'
 import { useUserAuth } from '../hooks/useUserAuth';
 
 
-const History = () => {
+const Buycredits = () => {
   const { isLoading } = useUserAuth();
 
   return (
-    <Homelayout activeMenu="History" isLoading={isLoading} />
+    <Homelayout activeMenu="Buy Credits" isLoading={isLoading} />
   )
 }
 
-export default History
+export default Buycredits

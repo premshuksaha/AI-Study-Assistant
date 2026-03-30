@@ -1,12 +1,12 @@
 import { useContext, useEffect, useId, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaXmark } from "react-icons/fa6";
-import { canSubmitLogin } from "../utils/helper";
-import { API_PATHS } from "../utils/apiPaths";
-import axiosInstance from "../utils/axiosInstance";
-import { UserContext } from "../context/UserContext";
+import { canSubmitLogin } from "../../utils/helper";
+import { API_PATHS } from "../../utils/apiPaths";
+import axiosInstance from "../../utils/axiosInstance";
+import { UserContext } from "../../context/UserContext";
 import Googlelogin from "./Googlelogin";
-import Loader from "./Loader";
+import Loader from "../Loader";
 import toast from "react-hot-toast";
 
 export default function Login({ open, onClose, onSwitchToSignup }) {
