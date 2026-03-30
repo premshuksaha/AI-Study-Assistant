@@ -60,9 +60,9 @@ const Sidebar = ({ activeMenu, onMenuClick }) => {
             {user?.name || ""}
         </h5>
         <p className="text-xs text-zinc-400">Welcome back</p>
-        <div className="mt-3 hidden items-center gap-2 rounded-lg bg-violet-500/30 px-3 py-2 lg:flex">
+        <div className="mt-3 hidden items-center gap-2 rounded-full bg-violet-500/30 px-3 py-2 lg:flex">
           <FaStar className="text-white" />
-          <span className="text-sm font-medium text-white">
+          <span className="text-xs font-medium text-white">
             {user?.credits || 0} Credits
           </span>
         </div>
@@ -79,7 +79,9 @@ const Sidebar = ({ activeMenu, onMenuClick }) => {
             }`}
             onClick={() => handleClick(item.path)}
           >
-            <item.icon className="text-xl" />
+            <item.icon
+              className={`text-xl ${item.label === "Logout" ? "text-red-500" : ""}`}
+            />
             <span>{item.label}</span>
           </button>
         ))}

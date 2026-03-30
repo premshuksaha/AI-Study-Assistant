@@ -37,9 +37,9 @@ const Navbar = ({ activeMenu }) => {
           Focused · Fast · Organized
         </div>
 
-        <div className="flex items-center gap-2 rounded-lg bg-violet-500/30 px-3 py-2 lg:hidden">
+        <div className="flex items-center gap-2 rounded-full bg-violet-500/30 px-3 py-2 lg:hidden">
           <FaStar className="text-white" />
-          <span className="text-sm font-medium text-white">
+          <span className="text-xs font-medium text-white">
             {user?.credits || 0} Credits
           </span>
         </div>
