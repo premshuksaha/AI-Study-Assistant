@@ -2,33 +2,33 @@ import React,{useContext} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 
-import { LuLayoutDashboard, LuWalletMinimal,LuHandCoins} from "react-icons/lu";
-import { FaStar } from "react-icons/fa";
-import { HiLogout } from "react-icons/hi";
+import { FaStar,FaHome ,FaHistory,} from "react-icons/fa";
+import { TbBoltFilled } from "react-icons/tb";
+import { LuLogOut } from "react-icons/lu";
 
 export const SideMenuData = [
     {
         id: "01",
         label: "Home",
-        icon: LuLayoutDashboard,
+        icon: FaHome,
         path: "/home",
     },
     {
         id: "02",
         label: "History",
-        icon: LuWalletMinimal,
+        icon: FaHistory,
         path: "/history",
     },
     {
         id: "03",
         label: "Buy Credits",
-        icon: LuHandCoins,
+        icon: TbBoltFilled,
         path: "/buy-credits",
     },
     {
         id: "06",
         label: "Logout",
-        icon: HiLogout,
+        icon: LuLogOut,
         path: "/logout",
     },
 ];
