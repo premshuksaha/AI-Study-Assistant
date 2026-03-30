@@ -2,7 +2,8 @@ import React,{useContext} from 'react'
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 
-import { LuLayoutDashboard, LuWalletMinimal, LuHandCoins } from "react-icons/lu";
+import { LuLayoutDashboard, LuWalletMinimal,LuHandCoins} from "react-icons/lu";
+import { FaStar } from "react-icons/fa";
 import { HiLogout } from "react-icons/hi";
 
 export const SideMenuData = [
@@ -59,6 +60,12 @@ const Sidebar = ({ activeMenu, onMenuClick }) => {
             {user?.name || ""}
         </h5>
         <p className="text-xs text-zinc-400">Welcome back</p>
+        <div className="mt-3 hidden items-center gap-2 rounded-lg bg-violet-500/30 px-3 py-2 lg:flex">
+          <FaStar className="text-white" />
+          <span className="text-sm font-medium text-white">
+            {user?.credits || 0} Credits
+          </span>
+        </div>
       </div>
 
       <div className="flex flex-col">

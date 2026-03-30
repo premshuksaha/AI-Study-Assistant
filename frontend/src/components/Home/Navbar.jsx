@@ -1,5 +1,7 @@
-import React, { useState} from 'react';
+import React, { useState, useContext } from 'react';
 import { HiOutlineMenu, HiOutlineX } from 'react-icons/hi';
+import { FaStar } from "react-icons/fa";
+import { UserContext } from '../../context/UserContext';
 import Sidebar from './Sidebar';
 
 const APP_NAME = "AI Study Assistant";
@@ -7,6 +9,7 @@ const APP_NAME = "AI Study Assistant";
 
 const Navbar = ({ activeMenu }) => {
   const [openSideMenu, setOpenSideMenu] = useState(false);
+  const { user } = useContext(UserContext);
 
   return (
     <div className="sticky top-0 z-10 border-b border-white/10 bg-zinc-950/80 backdrop-blur-md">
@@ -32,6 +35,13 @@ const Navbar = ({ activeMenu }) => {
 
         <div className="ml-auto hidden text-xs text-zinc-400 sm:block md:text-sm">
           Focused · Fast · Organized
+        </div>
+
+        <div className="flex items-center gap-2 rounded-lg bg-violet-500/30 px-3 py-2 lg:hidden">
+          <FaStar className="text-white" />
+          <span className="text-sm font-medium text-white">
+            {user?.credits || 0} Credits
+          </span>
         </div>
       </div>
 
