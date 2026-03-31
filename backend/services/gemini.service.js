@@ -1,6 +1,6 @@
-const Gemini_URL="https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview:generateContent"
+const Gemini_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview:generateContent";
 
-export const generateContent = async (prompt) => {
+const generateContent = async (prompt) => {
     try {
         const response = await fetch(`${Gemini_URL}?key=${process.env.GEMINI_API_KEY}`, {
             method: 'POST',
@@ -34,4 +34,8 @@ export const generateContent = async (prompt) => {
         console.error('Error generating content:', error);
         throw error;
     }
-}
+};
+
+module.exports = {
+    generateContent,
+};
