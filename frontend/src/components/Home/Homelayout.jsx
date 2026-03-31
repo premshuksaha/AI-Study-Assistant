@@ -26,7 +26,7 @@ const Homelayout = ({ activeMenu, children, isLoading = false }) => {
               <div className="hidden lg:block">
                 <Sidebar activeMenu={activeMenu} />
               </div>
-              <div className="h-full min-h-0 flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm md:p-6">
+              <div className="h-full min-h-0 flex-1 overflow-y-auto rounded-2xl border border-white/10 bg-white/5 p-3 backdrop-blur-sm md:p-6">
                 {children}
               </div>
             </div>

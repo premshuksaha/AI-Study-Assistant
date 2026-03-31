@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import toast from 'react-hot-toast';
 import Loader from '../Loader';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
+import { UserContext } from '../../context/UserContext';
 
 const initialFormData = {
   topic: '',
@@ -33,10 +34,10 @@ const ToggleSwitch = ({ id, label, checked, onChange }) => {
   );
 };
 
-function TopicForm() {
+function TopicForm({ onResult }) {
   const [formData, setFormData] = useState(initialFormData);
   const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState(null);
+  const { user, updateUser } = useContext(UserContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -49,7 +50,15 @@ function TopicForm() {
 
   const handleGenerate = async () => {
     const response = await axiosInstance.post(API_PATHS.GENERATE_NOTES, formData);
-    setResult(response?.data?.data ?? null);
+    
+    // Update user credits in context
+    if (response?.data?.creditsLeft !== undefined && user) {
+      updateUser({
+        ...user,
+        credits: response.data.creditsLeft,
+      });
+    }
+    onResult?.(response?.data?.data ?? null);
   };
 
   const handleSubmit = async (e) => {
@@ -75,8 +84,8 @@ function TopicForm() {
   };
 
   return (
-    <div className="w-full p-6 sm:p-6">
-      <div className="mb-5">
+    <div className="w-full p-4 sm:p-6">
+      <div className="mb-6">
         <h2 className="text-xl font-semibold text-zinc-100">Generate Study Notes</h2>
         <p className="mt-1 text-sm text-zinc-400">
           Fill in your topic details and choose what to include.
@@ -153,29 +162,19 @@ function TopicForm() {
             onChange={() => handleToggleChange('includeChart')}
           />
         </div>
-
         <div className="flex justify-center">
           <button
             type="submit"
             disabled={submitting}
-            className="rounded-xl bg-violet-500 px-18 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className="rounded-xl bg-violet-500 px-8 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? (
-              <Loader size="sm" text="Generating..." className="justify-center text-white" />
+              <Loader size="sm" text="Generating..." className="justify-center text-white px-8" />
             ) : (
-              'Generate Notes'
+              'Generate Notes (10 Credits)'
             )}
           </button>
         </div>
-
-        {result && (
-          <div className="rounded-xl border border-white/10 bg-zinc-950/40 p-4">
-            <h3 className="mb-2 text-sm font-semibold text-zinc-100">Generated Result</h3>
-            <pre className="max-h-80 overflow-auto whitespace-pre-wrap wrap-break-word text-xs text-zinc-200">
-              {typeof result === 'string' ? result : JSON.stringify(result, null, 2)}
-            </pre>
-          </div>
-        )}
       </form>
     </div>
   );
