@@ -7,4 +7,5 @@ export const API_PATHS = {
         GOOGLE: '/api/auth/google',
         PROFILE: '/api/auth/profile',
     },
+    GENERATE_NOTES: '/api/generate',
 }

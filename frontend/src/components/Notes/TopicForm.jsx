@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import Loader from '../Loader';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPaths';
 
 const initialFormData = {
   topic: '',
   classLevel: '',
   examType: '',
-  examRevisionMode: false,
+  revisionMode: false,
   includeDiagram: false,
   includeChart: false,
 };
@@ -31,6 +35,8 @@ const ToggleSwitch = ({ id, label, checked, onChange }) => {
 
 function TopicForm() {
   const [formData, setFormData] = useState(initialFormData);
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState(null);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -41,8 +47,31 @@ function TopicForm() {
     setFormData((prev) => ({ ...prev, [name]: !prev[name] }));
   };
 
-  const handleSubmit = (e) => {
+  const handleGenerate = async () => {
+    const response = await axiosInstance.post(API_PATHS.GENERATE_NOTES, formData);
+    setResult(response?.data?.data ?? null);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submitting) return;
+
+    const { topic, classLevel, examType } = formData;
+
+    if (!topic.trim() || !classLevel.trim() || !examType.trim()) {
+      toast.error('Please fill topic, class level, and exam type.');
+      return;
+    }
+
+    try {
+      setSubmitting(true);
+      await handleGenerate();
+    } catch (err) {
+      const message = err?.response?.data?.message || 'Failed to generate notes. Please try again.';
+      toast.error(message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -54,7 +83,7 @@ function TopicForm() {
         </p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form className="space-y-5" onSubmit={handleSubmit}>
         <div className="grid gap-4 md:grid-cols-3">
           <div>
             <label htmlFor="topic" className="mb-2 block text-sm font-medium text-zinc-200">
@@ -68,7 +97,6 @@ function TopicForm() {
               onChange={handleInputChange}
               placeholder="e.g. Photosynthesis"
               className="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none transition focus:border-violet-400"
-              required
             />
           </div>
 
@@ -84,7 +112,6 @@ function TopicForm() {
               onChange={handleInputChange}
               placeholder="e.g. Class 10"
               className="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none transition focus:border-violet-400"
-              required
             />
           </div>
 
@@ -100,17 +127,16 @@ function TopicForm() {
               onChange={handleInputChange}
               placeholder="e.g. Board Exam"
               className="w-full rounded-xl border border-white/10 bg-zinc-950/60 px-3 py-2.5 text-sm text-zinc-100 outline-none transition focus:border-violet-400"
-              required
             />
           </div>
         </div>
 
         <div className="grid gap-3 sm:grid-cols-3">
           <ToggleSwitch
-            id="examRevisionMode"
+            id="revisionMode"
             label="Exam Revision Mode"
-            checked={formData.examRevisionMode}
-            onChange={() => handleToggleChange('examRevisionMode')}
+            checked={formData.revisionMode}
+            onChange={() => handleToggleChange('revisionMode')}
           />
 
           <ToggleSwitch
@@ -131,11 +157,25 @@ function TopicForm() {
         <div className="flex justify-center">
           <button
             type="submit"
-            className="rounded-xl bg-violet-500 px-18 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-400"
+            disabled={submitting}
+            className="rounded-xl bg-violet-500 px-18 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            Generate Notes
+            {submitting ? (
+              <Loader size="sm" text="Generating..." className="justify-center text-white" />
+            ) : (
+              'Generate Notes'
+            )}
           </button>
         </div>
+
+        {result && (
+          <div className="rounded-xl border border-white/10 bg-zinc-950/40 p-4">
+            <h3 className="mb-2 text-sm font-semibold text-zinc-100">Generated Result</h3>
+            <pre className="max-h-80 overflow-auto whitespace-pre-wrap wrap-break-word text-xs text-zinc-200">
+              {typeof result === 'string' ? result : JSON.stringify(result, null, 2)}
+            </pre>
+          </div>
+        )}
       </form>
     </div>
   );
