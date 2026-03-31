@@ -14,8 +14,8 @@ const formatResult = (result) => {
 function Result({ result }) {
 	if (!result) {
 		return (
-			<div className='text-center mt-3'>
-			    <p className="bg-black/30 inline-block px-60 py-30 text-sm text-zinc-400 rounded-2xl">
+			<div className='text-center mt-6'>
+			    <p className="text-center bg-black/30 inline-block px-22 sm:px-8 md:px-60 lg:px-60 py-14 sm:py-6 md:py-30 lg:py-30 text-xs sm:text-sm md:text-base lg:text-sm text-zinc-400 rounded-2xl">
 					Generated notes will appear here.
 				</p>
 			</div>
