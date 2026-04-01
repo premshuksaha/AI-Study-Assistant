@@ -1,33 +1,164 @@
 import React from 'react';
+import Markdown from '../Markdown';
+import Mermaid from '../Mermaid';
+import Recharts from '../Recharts';
 
-const formatResult = (result) => {
-	if (!result) return '';
-	if (typeof result === 'string') return result;
+const parseResult = (result) => {
+	if (!result) return null;
+	if (typeof result === 'object') return result;
 
 	try {
-		return JSON.stringify(result, null, 2);
+		return JSON.parse(result);
 	} catch {
-		return String(result);
+		return null;
 	}
 };
 
+const TOPIC_BUCKETS = [
+	{ key: '⭐⭐⭐', title: 'Very Important Topics', tone: 'border-amber-400/40 bg-amber-500/10' },
+	{ key: '⭐⭐', title: 'Important Topics', tone: 'border-cyan-400/40 bg-cyan-500/10' },
+	{ key: '⭐', title: 'Frequently Asked Topics', tone: 'border-emerald-400/40 bg-emerald-500/10' },
+];
+
 function Result({ result }) {
+	const parsed = parseResult(result);
+
 	if (!result) {
 		return (
 			<div className='text-center mt-6'>
 			    <p className="text-center bg-black/30 inline-block px-22 sm:px-8 md:px-60 lg:px-60 py-14 sm:py-6 md:py-30 lg:py-30 text-xs sm:text-sm md:text-base lg:text-sm text-zinc-400 rounded-2xl">
-					Generated notes will appear here.
+					📚 Generated notes will appear here.
 				</p>
+			</div>
+            
+		);
+	}
+
+	if (!parsed) {
+		return (
+			<div>
+				<h3 className="text-lg text-zinc-100 px-2.5">Generated Result</h3>
+				<pre className="mt-3 whitespace-pre-wrap rounded-2xl bg-black/30 p-4 text-sm leading-6 text-zinc-200">
+					{String(result)}
+				</pre>
 			</div>
 		);
 	}
 
+	const subTopics = parsed?.subTopics || {};
+	const questions = parsed?.questions || {};
+
+    const revisionPoints = Array.isArray(parsed?.revisionPoints) ? parsed.revisionPoints.filter(Boolean) : [];
+    const hasRevisionPoints = revisionPoints.length > 0;
+
+	const diagramData = parsed?.diagram?.data || questions?.diagram || '';
+    const hasDiagram = typeof diagramData === 'string' && diagramData.trim().length > 0;
+
+    const chartItems = Array.isArray(parsed?.charts) ? parsed.charts : [];
+	const hasCharts = chartItems.some(
+		(chart) => Array.isArray(chart?.data) && chart.data.some((item) => item && item.name)
+	);
+
 	return (
-		<div >
-			<h3 className="text-lg text-zinc-100 px-2.5">Generated Result</h3>
-			<pre className="mt-3 whitespace-pre-wrap bg-black/30 p-4 text-sm leading-6 text-zinc-200">
-				{formatResult(result)}
-			</pre>
+		<div className="mt-4 space-y-6 bg-black/30 p-5">
+			<h3 className="text-lg text-zinc-100">Generated Result</h3>
+
+			<section className="space-y-3">
+				<h4 className="text-base font-semibold text-zinc-100">Sub Topics</h4>
+				<div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+					{TOPIC_BUCKETS.map((bucket) => {
+						const topics = Array.isArray(subTopics[bucket.key]) ? subTopics[bucket.key] : [];
+
+						return (
+							<div key={bucket.key} className={`rounded-2xl border p-4 ${bucket.tone}`}>
+								<p className="mb-2 text-sm font-semibold text-zinc-100">{bucket.title}</p>
+								{topics.length ? (
+									<ul className="space-y-1 text-sm text-zinc-200">
+										{topics.map((topic, index) => (
+											<li key={`${bucket.key}-${index}`} className="rounded-md px-2.5 py-1.5">
+												* {topic}
+											</li>
+										))}
+									</ul>
+								) : (
+									<p className="text-sm text-zinc-400">No topics found.</p>
+								)}
+							</div>
+						);
+					})}
+				</div>
+			</section>
+
+			<section className="space-y-4 rounded-2xl border border-white/10 bg-black/25 p-5">
+				<div className="flex flex-wrap items-center gap-2">
+					<h4 className="text-base font-semibold text-zinc-100">Importance</h4>
+					<span className="rounded-full bg-violet-500/20 px-3 py-1 text-xs font-medium text-violet-200">
+						{parsed?.importance || 'Not specified'}
+					</span>
+				</div>
+
+				<div className="grid gap-4 md:grid-cols-2">
+					<div>
+						<h5 className="mb-2 text-sm font-semibold text-zinc-100">Short Questions</h5>
+						{Array.isArray(questions.short) && questions.short.length ? (
+							<ul className="space-y-2 text-sm text-zinc-200">
+								{questions.short.map((question, index) => (
+									<li key={`short-${index}`} className="rounded-lg px-3 py-2">
+										* {question}
+									</li>
+								))}
+							</ul>
+						) : (
+							<p className="text-sm text-zinc-400">No short questions available.</p>
+						)}
+					</div>
+
+					<div>
+						<h5 className="mb-2 text-sm font-semibold text-zinc-100">Long Questions</h5>
+						{Array.isArray(questions.long) && questions.long.length ? (
+							<ul className="space-y-2 text-sm text-zinc-200">
+								{questions.long.map((question, index) => (
+									<li key={`long-${index}`} className="rounded-lg bg-black/35 px-3 py-2">
+										* {question}
+									</li>
+								))}
+							</ul>
+						) : (
+							<p className="text-sm text-zinc-400">No long questions available.</p>
+						)}
+					</div>
+				</div>
+			</section>
+
+			<section className="space-y-3">
+				<h4 className="text-base font-semibold text-zinc-100">Notes</h4>
+				<Markdown content={parsed?.notes || ''} />
+			</section>
+
+			{hasRevisionPoints && (
+				<section className="space-y-3 rounded-2xl border border-white/10 bg-black/25 p-5">
+					<h4 className="text-base font-semibold text-zinc-100">Revision Points</h4>
+					<ul className="list-disc space-y-2 pl-5 text-sm text-zinc-200">
+						{revisionPoints.map((point, index) => (
+							<li key={`revision-${index}`}>{point}</li>
+						))}
+					</ul>
+				</section>
+			)}
+
+			{hasDiagram && (
+				<section className="space-y-3">
+					<h4 className="text-base font-semibold text-zinc-100">Diagram</h4>
+					<Mermaid chart={diagramData} />
+				</section>
+			)}
+
+			{hasCharts && (
+				<section className="space-y-3">
+					<h4 className="text-base font-semibold text-zinc-100">Charts</h4>
+					<Recharts charts={chartItems} />
+				</section>
+			)}
 		</div>
 	);
 }
