@@ -2,6 +2,7 @@ import React from 'react';
 import Markdown from '../Markdown';
 import Mermaid from '../Mermaid';
 import Recharts from '../Recharts';
+import Download from '../Download';
 
 const parseResult = (result) => {
 	if (!result) return null;
@@ -90,7 +91,10 @@ function Result({ result }) {
 
 	return (
 		<div className="mt-4 space-y-6 bg-zinc-900 p-5">
-			<h3 className="text-lg text-zinc-100">Generated Result</h3>
+			<div className="flex items-center justify-between gap-3">
+				<h3 className="text-lg text-zinc-100">Generated Result</h3>
+				<Download />
+			</div>
 
 			<section className="space-y-3">
 				<h4 className="text-base font-semibold text-zinc-100">Sub Topics</h4>
