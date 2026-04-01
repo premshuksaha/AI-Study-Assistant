@@ -1,5 +1,23 @@
 const PDFDocument = require('pdfkit');
 
+const getTopicBucketHeading = (star) => {
+	const normalized = String(star || '').trim();
+
+	if (normalized === '⭐⭐⭐' || normalized === '3' || normalized === '***') {
+		return 'Very Important Topics';
+	}
+
+	if (normalized === '⭐⭐' || normalized === '2' || normalized === '**') {
+		return 'Important Topics';
+	}
+
+	if (normalized === '⭐' || normalized === '1' || normalized === '*') {
+		return 'Frequently Asked Topics';
+	}
+
+	return `${normalized} Topics`;
+};
+
 exports.pdfDownload = async (req, res) => {
 	try {
 		const { result } = req.body;
@@ -33,7 +51,7 @@ exports.pdfDownload = async (req, res) => {
 		// Title
 		doc.fontSize(20).text('AI Study Assistant', { align: 'center' });
 		doc.moveDown();
-		doc.fontSize(14).text(`Importance: ${result.importance || 'Not specified'}`);
+		doc.fontSize(14).text(`Topic: ${result.topic}`);
 		doc.moveDown();
 
 		// Sub Topics
@@ -41,7 +59,7 @@ exports.pdfDownload = async (req, res) => {
 		doc.moveDown(0.5);
 		Object.entries(result.subTopics || {}).forEach(([star, topics]) => {
 			doc.moveDown(0.5);
-			doc.fontSize(13).text(`${star} Topics:`);
+			doc.fontSize(13).text(`${getTopicBucketHeading(star)}:`);
 
 			(topics || []).forEach((t) => {
 				doc.fontSize(12).text(`• ${t}`);

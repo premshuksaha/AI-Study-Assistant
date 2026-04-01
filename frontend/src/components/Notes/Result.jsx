@@ -93,7 +93,7 @@ function Result({ result }) {
 		<div className="mt-4 space-y-6 bg-zinc-900 p-5">
 			<div className="flex items-center justify-between gap-3">
 				<h3 className="text-lg text-zinc-100">Generated Result</h3>
-				<Download />
+				<Download result={parsed} topic={parsed?.topic} />
 			</div>
 
 			<section className="space-y-3">

@@ -50,6 +50,11 @@ function TopicForm({ onResult }) {
 
   const handleGenerate = async () => {
     const response = await axiosInstance.post(API_PATHS.GENERATE_NOTES, formData);
+    const generatedData = response?.data?.data ?? null;
+    const normalizedResult =
+      generatedData && typeof generatedData === 'object'
+        ? { ...generatedData, topic: generatedData.topic || formData.topic }
+        : generatedData;
     
     // Update user credits in context
     if (response?.data?.creditsLeft !== undefined && user) {
@@ -58,7 +63,7 @@ function TopicForm({ onResult }) {
         credits: response.data.creditsLeft,
       });
     }
-    onResult?.(response?.data?.data ?? null);
+    onResult?.(normalizedResult);
   };
 
   const handleSubmit = async (e) => {
