@@ -9,4 +9,8 @@ export const API_PATHS = {
     },
     GENERATE_NOTES: '/api/generate',
     DOWNLOAD: '/api/download',
+    NOTES:{
+        GET_ALL: '/api/notes',
+        GET_SINGLE: (id) => `/api/notes/${id}`,
+    }
 }

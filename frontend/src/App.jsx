@@ -10,6 +10,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<Home />} />
         <Route path="/history" element={<History />} />
+        <Route path="/history/:noteId" element={<History />} />
         <Route path="/buy-credits" element={<Buycredits />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
