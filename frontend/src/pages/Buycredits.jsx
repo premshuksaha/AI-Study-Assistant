@@ -22,6 +22,7 @@ function PricingCard({
 
   return (
     <article
+      onClick={() => setSelectedPrice(amount)}
       className={`relative rounded-2xl border p-6 transition ${
         isSelected
           ? 'border-emerald-400 bg-emerald-500/10 shadow-[0_0_0_1px_rgba(16,185,129,0.4)]'
@@ -56,22 +57,13 @@ function PricingCard({
         ))}
       </ul>
 
-      <div className="mt-6 space-y-3">
+      <div className="mt-6">
         <button
           type="button"
-          onClick={() => setSelectedPrice(amount)}
-          className={`w-full rounded-xl border px-4 py-2 text-sm font-semibold transition ${
-            isSelected
-              ? 'border-emerald-400 bg-emerald-500/20 text-emerald-100'
-              : 'border-white/15 bg-zinc-900/50 text-zinc-100 hover:border-white/30'
-          }`}
-        >
-          {isSelected ? 'Selected Plan' : 'Select Plan'}
-        </button>
-
-        <button
-          type="button"
-          onClick={() => onBuy({ title, amount, credits })}
+          onClick={(e) => {
+            e.stopPropagation();
+            onBuy({ title, amount, credits });
+          }}
           disabled={paying}
           className="w-full rounded-xl bg-violet-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
