@@ -66,13 +66,18 @@ IMPORTANCE RULES:
 
 DIAGRAM RULES:
 - If INCLUDE DIAGRAM is YES:
+  - questions.diagram MUST be a plain-language exam question, not code
   - diagram.data MUST be a SINGLE STRING
   - Valid Mermaid syntax only
   - Must start with: graph TD
-  - Wrap EVERY node label in square brackets [ ]
+  - Use explicit node IDs with labels, example: ds[Data Structures] --> linear[Linear]
+  - One edge per line using \\n inside the string
+  - Do NOT output compact inline chains on a single line
   - Do NOT use special characters inside labels
+  - Do NOT put Mermaid syntax in questions.diagram
 - If INCLUDE DIAGRAM is NO:
   - diagram.data MUST be ""
+  - questions.diagram MUST be ""
 
 CHART RULES (RECHARTS):
 - If INCLUDE CHARTS is YES:

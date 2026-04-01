@@ -27,6 +27,16 @@ const DotItem = ({ children, className = '' }) => (
 	</li>
 );
 
+const isMermaidLike = (value) => {
+	if (typeof value !== 'string') return false;
+	const text = value.trim();
+	if (!text) return false;
+
+	return /(^|\n)\s*(graph|flowchart)\s+[A-Za-z]+\b/i.test(text)
+		|| /-->/.test(text)
+		|| /\[[^\]]+\]/.test(text);
+};
+
 function Result({ result }) {
 	const parsed = parseResult(result);
 
@@ -70,7 +80,7 @@ function Result({ result }) {
 		parsed?.diagramQuestion,
 		parsed?.diagram?.question,
 		questionDiagramField,
-	].find((value) => typeof value === 'string' && value.trim().length > 0) || '';
+	].find((value) => typeof value === 'string' && value.trim().length > 0 && !isMermaidLike(value)) || '';
 	const hasDiagramQuestion = diagramQuestion.trim().length > 0;
 
     const chartItems = Array.isArray(parsed?.charts) ? parsed.charts : [];
