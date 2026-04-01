@@ -8,4 +8,5 @@ export const API_PATHS = {
         PROFILE: '/api/auth/profile',
     },
     GENERATE_NOTES: '/api/generate',
+    DOWNLOAD: '/api/download',
 }

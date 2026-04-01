@@ -4,6 +4,7 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth.routes');
 const generateRoutes = require('./routes/generate.routes');
+const downloadRoutes = require('./routes/download.route');
 
 const app = express();
 
@@ -22,6 +23,7 @@ connectDB();
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/generate', generateRoutes);
+app.use('/api/download', downloadRoutes);
 
 
 const PORT = process.env.PORT || 5000;
