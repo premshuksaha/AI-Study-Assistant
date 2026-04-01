@@ -20,6 +20,13 @@ const TOPIC_BUCKETS = [
 	{ key: '⭐', title: 'Frequently Asked Topics', tone: 'border-emerald-400/40 bg-emerald-500/10' },
 ];
 
+const DotItem = ({ children, className = '' }) => (
+	<li className={`flex items-start gap-2 rounded-md px-2.5 py-1.5 ${className}`}>
+		<span className="mt-1.5 h-1.5 w-1.5 flex-none rounded-full bg-violet-400/90" />
+		<span>{children}</span>
+	</li>
+);
+
 function Result({ result }) {
 	const parsed = parseResult(result);
 
@@ -75,9 +82,7 @@ function Result({ result }) {
 								{topics.length ? (
 									<ul className="space-y-1 text-sm text-zinc-200">
 										{topics.map((topic, index) => (
-											<li key={`${bucket.key}-${index}`} className="rounded-md px-2.5 py-1.5">
-												* {topic}
-											</li>
+											<DotItem key={`${bucket.key}-${index}`}>{topic}</DotItem>
 										))}
 									</ul>
 								) : (
@@ -103,9 +108,9 @@ function Result({ result }) {
 						{Array.isArray(questions.short) && questions.short.length ? (
 							<ul className="space-y-2 text-sm text-zinc-200">
 								{questions.short.map((question, index) => (
-									<li key={`short-${index}`} className="rounded-lg px-3 py-2">
-										* {question}
-									</li>
+									<DotItem key={`short-${index}`} className="rounded-lg px-3 py-2">
+										{question}
+									</DotItem>
 								))}
 							</ul>
 						) : (
@@ -118,9 +123,9 @@ function Result({ result }) {
 						{Array.isArray(questions.long) && questions.long.length ? (
 							<ul className="space-y-2 text-sm text-zinc-200">
 								{questions.long.map((question, index) => (
-									<li key={`long-${index}`} className="rounded-lg bg-black/35 px-3 py-2">
-										* {question}
-									</li>
+									<DotItem key={`long-${index}`} className="rounded-lg bg-black/35 px-3 py-2">
+										{question}
+									</DotItem>
 								))}
 							</ul>
 						) : (
@@ -138,9 +143,9 @@ function Result({ result }) {
 			{hasRevisionPoints && (
 				<section className="space-y-3 rounded-2xl border border-white/10 bg-black/25 p-5">
 					<h4 className="text-base font-semibold text-zinc-100">Revision Points</h4>
-					<ul className="list-disc space-y-2 pl-5 text-sm text-zinc-200">
+					<ul className="space-y-2 text-sm text-zinc-200">
 						{revisionPoints.map((point, index) => (
-							<li key={`revision-${index}`}>{point}</li>
+							<DotItem key={`revision-${index}`}>{point}</DotItem>
 						))}
 					</ul>
 				</section>
