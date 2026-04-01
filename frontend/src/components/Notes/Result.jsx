@@ -58,8 +58,20 @@ function Result({ result }) {
     const revisionPoints = Array.isArray(parsed?.revisionPoints) ? parsed.revisionPoints.filter(Boolean) : [];
     const hasRevisionPoints = revisionPoints.length > 0;
 
-	const diagramData = parsed?.diagram?.data || questions?.diagram || '';
+	const rawDiagramData = parsed?.diagram?.data;
+	const questionDiagramField = questions?.diagram;
+
+	const diagramData = typeof rawDiagramData === 'string' && rawDiagramData.trim()
+		? rawDiagramData
+		: '';
     const hasDiagram = typeof diagramData === 'string' && diagramData.trim().length > 0;
+
+	const diagramQuestion = [
+		parsed?.diagramQuestion,
+		parsed?.diagram?.question,
+		questionDiagramField,
+	].find((value) => typeof value === 'string' && value.trim().length > 0) || '';
+	const hasDiagramQuestion = diagramQuestion.trim().length > 0;
 
     const chartItems = Array.isArray(parsed?.charts) ? parsed.charts : [];
 	const hasCharts = chartItems.some(
@@ -67,7 +79,7 @@ function Result({ result }) {
 	);
 
 	return (
-		<div className="mt-4 space-y-6 bg-black/30 p-5">
+		<div className="mt-4 space-y-6 bg-zinc-900 p-5">
 			<h3 className="text-lg text-zinc-100">Generated Result</h3>
 
 			<section className="space-y-3">
@@ -123,7 +135,7 @@ function Result({ result }) {
 						{Array.isArray(questions.long) && questions.long.length ? (
 							<ul className="space-y-2 text-sm text-zinc-200">
 								{questions.long.map((question, index) => (
-									<DotItem key={`long-${index}`} className="rounded-lg bg-black/35 px-3 py-2">
+									<DotItem key={`long-${index}`} className="rounded-lg px-3 py-2">
 										{question}
 									</DotItem>
 								))}
@@ -151,10 +163,15 @@ function Result({ result }) {
 				</section>
 			)}
 
-			{hasDiagram && (
+			{(hasDiagram || hasDiagramQuestion) && (
 				<section className="space-y-3">
 					<h4 className="text-base font-semibold text-zinc-100">Diagram</h4>
-					<Mermaid chart={diagramData} />
+					{hasDiagramQuestion && (
+						<div className="rounded-xl border border-white/10 p-3 text-sm text-violet-100">
+							<p className="mt-1">{diagramQuestion}</p>
+						</div>
+					)}
+					{hasDiagram && <Mermaid chart={diagramData} />}
 				</section>
 			)}
 
