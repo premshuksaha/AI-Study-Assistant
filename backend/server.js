@@ -6,6 +6,8 @@ const authRoutes = require('./routes/auth.routes');
 const generateRoutes = require('./routes/generate.routes');
 const downloadRoutes = require('./routes/download.route');
 const notesRoutes = require('./routes/notes.routes');
+const stripeRoutes = require('./routes/stripe.routes');
+const { stripeWebhook } = require('./controllers/stripe.controller');
 
 const app = express();
 
@@ -18,6 +20,8 @@ app.use(
 })
 );
 
+app.post('/api/stripe/webhook', express.raw({ type: 'application/json' }), stripeWebhook);
+
 app.use(express.json());
 
 connectDB();
@@ -27,6 +31,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/generate', generateRoutes);
 app.use('/api/download', downloadRoutes);
 app.use('/api/notes', notesRoutes);
+app.use('/api/stripe', stripeRoutes);
 
 
 const PORT = process.env.PORT || 5000;
