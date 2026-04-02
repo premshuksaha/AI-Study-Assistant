@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Homelayout from '../components/Home/homelayout'
+import Homelayout from '../components/Home/Homelayout'
 import { useUserAuth } from '../hooks/useUserAuth';
 import TopicForm from '../components/Notes/TopicForm';
 import Result from '../components/Notes/Result';
