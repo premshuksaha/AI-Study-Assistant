@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import toast from 'react-hot-toast';
-import Homelayout from '../components/Home/homelayout'
+import Homelayout from '../components/Home/Homelayout'
 import { useUserAuth } from '../hooks/useUserAuth';
 
 function PricingCard({

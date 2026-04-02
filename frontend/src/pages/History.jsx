@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast';
-import Homelayout from '../components/Home/homelayout'
+import Homelayout from '../components/Home/Homelayout'
 import { useUserAuth } from '../hooks/useUserAuth';
 import Noteshistory from '../components/History/Noteshistory';
 import Notes from '../components/History/Notes';
