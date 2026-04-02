@@ -12,5 +12,9 @@ export const API_PATHS = {
     NOTES:{
         GET_ALL: '/api/notes',
         GET_SINGLE: (id) => `/api/notes/${id}`,
+    },
+    STRIPE: {
+        CREATE_ORDER: '/api/stripe/create-order',
     }
+    
 }

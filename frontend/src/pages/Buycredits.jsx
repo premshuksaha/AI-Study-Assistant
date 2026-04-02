@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react'
 import toast from 'react-hot-toast';
 import Homelayout from '../components/Home/Homelayout'
 import { useUserAuth } from '../hooks/useUserAuth';
+import { API_PATHS } from '../utils/apiPaths';
+import axiosInstance from '../utils/axiosInstance';
 
 function PricingCard({
   title,
@@ -119,8 +121,21 @@ const Buycredits = () => {
       setPayingAmount(plan.amount);
       setSelectedPrice(plan.amount);
 
-    } catch {
-      toast.error('Unable to start payment right now.');
+      const response = await axiosInstance.post(API_PATHS.STRIPE.CREATE_ORDER, {
+        amount: plan.amount,
+      });
+
+      const checkoutUrl = response?.data?.checkoutUrl;
+
+      if (!checkoutUrl) {
+        toast.error('Unable to start checkout. Please try again.');
+        return;
+      }
+
+      window.location.assign(checkoutUrl);
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message || 'Unable to start payment right now.');
     } finally {
       setPaying(false);
       setPayingAmount(null);
@@ -134,7 +149,7 @@ const Buycredits = () => {
           <div>
             <h1 className="text-2xl font-semibold text-zinc-100">Buy Credits</h1>
             <p className="mt-1 text-sm text-zinc-400">
-              Pick a credit pack now, then we will connect checkout to your Stripe payment controller.
+              Pick a credit pack to continue to secure Stripe checkout.
             </p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-200">
